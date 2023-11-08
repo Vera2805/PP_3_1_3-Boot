@@ -1,11 +1,13 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.Set;
@@ -13,18 +15,20 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    @Lazy
+    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDao = userDao;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     @Transactional
     public void addUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
-
     }
 
     @Override
@@ -41,6 +45,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(User user) {
+        User oldUser = userDao.getUser(user.getId());
+        if (!oldUser.getPassword().equals(user.getPassword())) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         userDao.updateUser(user);
     }
 
@@ -61,5 +69,6 @@ public class UserServiceImpl implements UserService {
 
         return userDao.loadUserByUsername(username);
     }
+
 
 }
