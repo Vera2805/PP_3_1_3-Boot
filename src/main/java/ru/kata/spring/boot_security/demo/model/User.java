@@ -5,8 +5,15 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Collection;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,8 +36,8 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
+    @ManyToMany
+    private Set<Role> roles;
 
     public User() {
     }
@@ -98,10 +105,6 @@ public class User implements UserDetails {
     }
 
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -125,6 +128,13 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public void setRoles (Set<Role> roles) {
+        this.roles = roles;
     }
 
 }
