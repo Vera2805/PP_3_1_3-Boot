@@ -3,7 +3,7 @@ package ru.kata.spring.boot_security.demo.dao;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
@@ -13,21 +13,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-@Transactional(readOnly = true)
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
 
     @Override
-    @Transactional
     public void addUser(User user) {
+       // Set<Role> roles = new HashSet<>();
+      //  for (Role role : user.getRoles()) {
 
+       //     roles.add(userDao.getRoleByName(role.getName()));
+     //   }
+    //    user.setRoles(roles);
         entityManager.persist(user);
     }
 
     @Override
-    @Transactional
     public void deleteUser(Long id) {
         User user = getUser(id);
         entityManager.remove(user);
@@ -35,14 +37,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Set<User> getAllUsers() {
-        Set<User> AllUsers = new HashSet<User>(entityManager.createQuery("select u from User u", User.class).getResultList());
-        return AllUsers;
+        Set<User> AllUsers = (Set<User>) entityManager.createQuery("select u from User u", User.class).getResultList();
+        return  AllUsers;
     }
 
     @Override
-    @Transactional
     public void updateUser(User user) {
-        user.setRoles(getUser(user.getId()).getRoles());
+      //  Set<Role> roles = new HashSet<>();
+     //   for (Role role : user.getRoles()) {
+     //       roles.add(userDao.getRoleByName(role.getName()));
+     //   }
+     //   user.setRoles(roles);
         entityManager.merge(user);
     }
 
@@ -59,7 +64,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         TypedQuery<User> typedQuery = entityManager.createQuery(
-                "select u from User u where u.username = '" + username + "'", User.class
+                "select u from User u LEFT JOIN FETCH u.roles where u.username = '" + username + "'", User.class
         );
         User user = typedQuery.getSingleResult();
         if (user == null) {
@@ -68,4 +73,15 @@ public class UserDaoImpl implements UserDao {
         return user;
     }
 
-}
+
+    @Override
+    public Role getRoleByName(String roleName) {
+        TypedQuery<Role> typedQuery = entityManager.createQuery(
+                "select r from Role r where r.name = '" + roleName + "'", Role.class);
+        return typedQuery.getSingleResult();
+    }
+
+
+
+
+    }
