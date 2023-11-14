@@ -9,13 +9,25 @@ import java.util.Set;
 
 public interface UserDao {
     void addUser(User user);
+
     void deleteUser(Long id);
+
     Set<User> getAllUsers();
+
     void updateUser(User user);
+
     User getUser(Long id);
+
     String getPassword(Long id);
+
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-
     Role getRoleByName(String roleName);
+
+    void save(User user);
+
 }
+
+
+
+

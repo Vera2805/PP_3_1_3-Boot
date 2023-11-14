@@ -6,12 +6,17 @@ import java.util.Set;
 
 public interface RoleDao {
     Set<Role> indexRoles();
-    Role getRole(String roleName);
-    Role getRoleById(int id);
+
+    Role getRoleById(Long id);
+
     void addRole(Role role);
+
     Set<Role> getRolesByIds(Set<Integer> roleIds);
 
     Role findByName(String roleName);
 
     Role getRoleByName(String roleName);
+
+
+    void save(Role role);
 }
