@@ -18,16 +18,24 @@ public class RoleDaoImpl implements RoleDao {
         return (Set<Role>) entityManager.createQuery("select r from Role r", Role.class).getResultList();
     }
 
+
     @Override
-    public Role getRole(String roleName) {
+    public Role getRoleByName(String roleName) {
         return entityManager
                 .createQuery("select r from Role r where r.name =: name", Role.class)
                 .setParameter("name", roleName)
-                .getSingleResult();
+                .getResultList().stream().findFirst().orElse(null);
+    }
+
+
+    @Override
+    public void save(Role role) {
+        entityManager.persist(role);
+
     }
 
     @Override
-    public Role getRoleById(int id) {
+    public Role getRoleById(Long id) {
         return entityManager.find(Role.class, id);
     }
 
@@ -49,9 +57,5 @@ public class RoleDaoImpl implements RoleDao {
         return entityManager.find(Role.class, roleName);
     }
 
-    @Override
-    public Role getRoleByName(String roleName) {
-        return entityManager.find(Role.class, roleName);
-    }
 
 }

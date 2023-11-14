@@ -25,10 +25,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-       @Override
+      @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf()
+               .csrf()
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/user").hasRole("USER")
@@ -37,14 +37,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+               // .loginPage("/login")
                 .successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()
                 .permitAll()
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/login");
     }
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

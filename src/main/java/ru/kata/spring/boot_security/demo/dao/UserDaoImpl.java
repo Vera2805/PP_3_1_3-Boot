@@ -20,12 +20,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(User user) {
-       // Set<Role> roles = new HashSet<>();
-      //  for (Role role : user.getRoles()) {
-
-       //     roles.add(userDao.getRoleByName(role.getName()));
-     //   }
-    //    user.setRoles(roles);
         entityManager.persist(user);
     }
 
@@ -37,17 +31,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Set<User> getAllUsers() {
-        Set<User> AllUsers = (Set<User>) entityManager.createQuery("select u from User u", User.class).getResultList();
-        return  AllUsers;
+
+        return new HashSet<>(entityManager.createQuery("select u from User u", User.class)
+                .getResultList());
     }
 
     @Override
     public void updateUser(User user) {
-      //  Set<Role> roles = new HashSet<>();
-     //   for (Role role : user.getRoles()) {
-     //       roles.add(userDao.getRoleByName(role.getName()));
-     //   }
-     //   user.setRoles(roles);
         entityManager.merge(user);
     }
 
@@ -81,7 +71,14 @@ public class UserDaoImpl implements UserDao {
         return typedQuery.getSingleResult();
     }
 
-
-
+    @Override
+    public void save(User user) {
 
     }
+
+
+
+}
+
+
+
