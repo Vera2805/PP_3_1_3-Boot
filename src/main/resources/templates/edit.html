@@ -14,9 +14,9 @@
   <label for="username">Логин: </label><input type="text" name="username" id="username" th:value="${user.username}" required placeholder="Логин" /><br />
   <label for="password">Новый пароль: </label><input type="text" name="password" id="password" required placeholder="Пароль" />
  <h3>Выберите роль:</h3>
-  <input type="checkbox" id="adminRole" name="roles" value="admin" th:checked="${user.roles == 'admin'}">
+  <input type="checkbox" id="adminRole" name="roles" value="admin" th:checked="${user.roles == 'ROLE_ADMIN'}">
   <label for="adminRole">Администратор</label><br>
-  <input type="checkbox" id="userRole" name="roles" value="user" th:checked="${user.roles == 'user'}">
+  <input type="checkbox" id="userRole" name="roles" value="user" th:checked="${user.roles == 'ROLE-USER'}">
   <label for="userRole">Пользователь</label><br>
   <input type="hidden" name="id" id="id" th:value="${user.id}"  />
   <br />

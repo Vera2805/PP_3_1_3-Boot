@@ -4,23 +4,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Controller
 public class AdminController {
     private final UserService userService;
+    private final RoleService roleService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping(value = "/admin")
@@ -42,6 +43,7 @@ public class AdminController {
             return "add";
         }
         userService.addUser(user);
+        userService.save(user);
         return "redirect:/admin";
     }
 
@@ -55,6 +57,9 @@ public class AdminController {
     @PostMapping("/admin/update")
     public String updateUserForm(@ModelAttribute("user") User user) {
         userService.updateUser(user);
+        Set<Role> roles = user.getRoles().stream().map(role -> roleService.findByName(role.getName()))
+                .collect(Collectors.toSet());
+        user.setRoles(roles);
         return "redirect:/admin";
     }
 

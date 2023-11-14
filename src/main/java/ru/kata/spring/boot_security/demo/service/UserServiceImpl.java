@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -16,11 +17,13 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final RoleDao roleDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Lazy
-    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getAllUsers() {
+
         return userDao.getAllUsers();
     }
 
@@ -73,11 +77,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateRole(String updateRoleForm) {
-        
+
     }
 
     @Override
     public void updateRole(Role r) {
+
+    }
+
+    @Override
+    public void save(User user) {
 
     }
 
